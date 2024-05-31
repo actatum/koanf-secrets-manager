@@ -39,7 +39,6 @@ var k = koanf.New(".")
 func main() {
     // Initialize Provider
     provider, err := aws.Provider(aws.Config{
-        aws.Config{
         Region: "us-east-1",
         Secret: "my-top-secret-info",
         Timeout: 5*time.Second,
@@ -49,11 +48,7 @@ func main() {
     }
 
 	// Load JSON config.
-	if err := k.Load(aws.Provider(aws.Config{
-        Region: "us-east-1",
-        Secret: "my-top-secret-info",
-        Timeout: 5*time.Second,
-    }), json.Parser()); err != nil {
+	if err := k.Load(provider, json.Parser()); err != nil {
 		log.Fatalf("error loading config: %v", err)
 	}
 
