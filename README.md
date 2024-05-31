@@ -47,13 +47,13 @@ func main() {
         log.Fatalf("error initializing provider: %v", err)
     }
 
-	// Load JSON config.
-	if err := k.Load(provider, json.Parser()); err != nil {
-		log.Fatalf("error loading config: %v", err)
-	}
+    // Load JSON config.
+    if err := k.Load(provider, json.Parser()); err != nil {
+        log.Fatalf("error loading config: %v", err)
+    }
 
-	fmt.Println("parent's name is = ", k.String("parent1.name"))
-	fmt.Println("parent's ID is = ", k.Int("parent1.id"))
+    fmt.Println("parent's name is = ", k.String("parent1.name"))
+    fmt.Println("parent's ID is = ", k.Int("parent1.id"))
 }
 
 ```
