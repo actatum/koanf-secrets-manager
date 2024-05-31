@@ -12,6 +12,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
+const (
+	_defaultTimeout = 5 * time.Second
+)
+
 // Config for the provider.
 type Config struct {
 	// AWS Region
@@ -35,6 +39,10 @@ type SecretsManager struct {
 
 // Provider returns a provider from the given config.
 func Provider(cfg Config) (*SecretsManager, error) {
+	if cfg.Timeout == 0 {
+		cfg.Timeout = _defaultTimeout
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 	defer cancel()
 
