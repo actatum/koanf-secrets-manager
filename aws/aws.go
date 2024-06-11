@@ -29,6 +29,10 @@ type Config struct {
 
 	// Timeout determines the context timeout for aws requests.
 	Timeout time.Duration
+
+	// SecretsManagerClient
+	// If none is provided, the provider initialization will create one.
+	SecretsManagerClient *secretsmanager.Client
 }
 
 // SecretsManager implements a secrets manager provider.
@@ -43,22 +47,24 @@ func Provider(cfg Config) (*SecretsManager, error) {
 		cfg.Timeout = _defaultTimeout
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
-	defer cancel()
+	if cfg.SecretsManagerClient == nil {
+		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
+		defer cancel()
 
-	awsCfg, err := config.LoadDefaultConfig(
-		ctx,
-		config.WithRegion(cfg.Region),
-	)
-	if err != nil {
-		return nil, err
+		awsCfg, err := config.LoadDefaultConfig(
+			ctx,
+			config.WithRegion(cfg.Region),
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		cfg.SecretsManagerClient = secretsmanager.NewFromConfig(awsCfg)
 	}
-
-	svc := secretsmanager.NewFromConfig(awsCfg)
 
 	return &SecretsManager{
 		cfg: cfg,
-		svc: svc,
+		svc: cfg.SecretsManagerClient,
 	}, nil
 }
 
