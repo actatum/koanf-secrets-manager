@@ -62,7 +62,7 @@ func Provider(cfg Config) (*SecretsManager, error) {
 	}, nil
 }
 
-// ReadBytes reads the contents of the secrt and returns the bytes.
+// ReadBytes reads the contents of the secret and returns the bytes.
 func (p *SecretsManager) ReadBytes() ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), p.cfg.Timeout)
 	defer cancel()
