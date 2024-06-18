@@ -88,6 +88,10 @@ func (p *SecretsManager) ReadBytes() ([]byte, error) {
 		return nil, err
 	}
 
+	if resp.SecretString != nil {
+		return []byte(*resp.SecretString), nil
+	}
+
 	return resp.SecretBinary, nil
 }
 

@@ -92,8 +92,6 @@ func TestLoadWithJSONParser(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		fmt.Println("raw", k.Raw(), k.All(), k.KeyMap(), k.Keys())
-
 		if k.Get("stripe.api_key") != "testapikey" {
 			t.Errorf("LoadWithJSONParser() got = %v, want %v", k.Get("stripe.api_key"), "testapikey")
 		}
@@ -103,8 +101,6 @@ func TestLoadWithJSONParser(t *testing.T) {
 				APIKey string `koanf:"api_key"`
 			} `koanf:"stripe"`
 		}
-
-		fmt.Println(k.KeyMap())
 
 		var c Conf
 		if err := k.UnmarshalWithConf("", &c, koanf.UnmarshalConf{Tag: "koanf"}); err != nil {

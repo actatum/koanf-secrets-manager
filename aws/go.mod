@@ -10,7 +10,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.16
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.29.1
 	github.com/docker/go-connections v0.5.0
-	github.com/knadh/koanf/parsers/json v0.1.0
 	github.com/knadh/koanf/v2 v2.1.1
 	github.com/testcontainers/testcontainers-go v0.31.0
 	github.com/testcontainers/testcontainers-go/modules/localstack v0.31.0
