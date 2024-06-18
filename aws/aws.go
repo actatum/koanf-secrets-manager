@@ -4,7 +4,9 @@ package aws
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -92,4 +94,57 @@ func (p *SecretsManager) ReadBytes() ([]byte, error) {
 // Read is not supported for the secrets manager provider.
 func (p *SecretsManager) Read() (map[string]any, error) {
 	return nil, fmt.Errorf("secretsmanager provider does not support this method")
+}
+
+type JSONParser struct {
+	Prefix string
+}
+
+// Unmarshal parses the given JSON bytes.
+func (p *JSONParser) Unmarshal(b []byte) (map[string]interface{}, error) {
+	var out map[string]interface{}
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil, err
+	}
+
+	for k, v := range out {
+		if !strings.HasPrefix(k, p.Prefix) {
+			m, ok := out[p.Prefix]
+			if !ok {
+				out[p.Prefix] = map[string]any{
+					k: v,
+				}
+			}
+			mm, ok := m.(map[string]any)
+			if ok {
+				mm[k] = v
+			}
+
+			delete(out, k)
+		}
+	}
+
+	return out, nil
+}
+
+// Marshal marshals the given config map to JSON bytes.
+func (p *JSONParser) Marshal(o map[string]interface{}) ([]byte, error) {
+	for k, v := range o {
+		if !strings.HasPrefix(k, p.Prefix) {
+			m, ok := o[p.Prefix]
+			if !ok {
+				o[p.Prefix] = map[string]any{
+					k: v,
+				}
+			}
+			mm, ok := m.(map[string]any)
+			if ok {
+				mm[k] = v
+			}
+
+			delete(o, k)
+		}
+	}
+
+	return json.Marshal(o)
 }
