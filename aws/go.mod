@@ -1,8 +1,6 @@
 module github.com/actatum/koanf-secrets-manager/aws
 
-go 1.21
-
-toolchain go1.22.4
+go 1.27
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.27.0
